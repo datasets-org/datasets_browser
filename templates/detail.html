@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Datasets {{ ds["name"] }}</title>
+</head>
+
+<body id="details">
+<h1>{{ ds["name"] }}</h1>
+<p class="tags">
+{% for tag in ds["tags"] %}
+    <span>{{ tag }}</span>
+{% endfor %}
+</p>
+<h4>{{ id }}</h4>
+{% if "maintainer" in ds %}<p>{{ ds["maintainer"] }}</p>{% endif%}
+<p>
+    <ul>
+    {% for path in ds["paths"] %}
+        <li>{{ path }}</li>
+    {% endfor %}
+    </ul>
+</p>
+<p>
+    <ul>
+    {% for path in ds["links"] %}
+        <li>{{ path }}</li>
+    {% endfor %}
+    </ul>
+</p>
+<div class="other">
+    {% for key, data in ds.items() %}
+    {% if key not in processed %}
+    <div class="row">
+        <div class="cell"><div class="inner">{{ key }}</div></div>
+        <div class="cell"><div class="inner">{{ data }}</div></div>
+        <div class="clear"></div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% if "usages" in ds %}
+<p>
+    <ul>
+    {% for usage in ds["usages"] %}
+        <li>{{ usage }}</li>
+    {% endfor %}
+    </ul>
+</p>
+{% endif%}
+
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Datasets</title>
+</head>
+
+<body>
+<ul class="overview">
+    {% for key, ds in data %}
+        <a href="{{ url_for('detail', id=key) }}">
+            <li id="{{ key }}">
+                <h1>{{ ds["name"] }}</h1>
+                <p class="tags">
+                {% for tag in ds["tags"] %}
+                    <span>{{ tag }}</span>
+                {% endfor %}
+                </p>
+                <p class="paths">
+                {% for path in ds["paths"] %}
+                    <i>{{ path }}</i>
+                {% endfor %}
+                <p>
+             </li>
+        </a>
+    {% endfor %}
+</ul>
+</body>
+
+</html>

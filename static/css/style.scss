@@ -1,0 +1,80 @@
+body {
+  font-family: Arial;
+}
+
+.tags span {
+  text-transform: uppercase;
+  padding: .1em .3em;
+  border: solid 1px black;
+  border-radius: .2em;
+  display: inline-block;
+  font-size: .8em;
+}
+
+.overview {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: .6em .4em;
+    border-radius: .3em;
+    margin: .2em;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.4em;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+
+    &:nth-child(even) li {
+      background: #dddddd;
+    }
+
+    &:hover li {
+      background: #afafaf;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .paths {
+    color: gray;
+  }
+}
+
+.clear {
+  clear: both;
+}
+
+#details {
+  .other {
+    .cell {
+      width: 50%;
+      float: left;
+
+      .inner {
+        padding: 0 1em;
+      }
+
+      &:nth-child(1) {
+        text-align: right;
+      }
+    }
+
+    .row {
+      margin-bottom: .2em;
+      padding: .3em;
+
+      &:nth-child(even) {
+        background: #dddddd;
+      }
+    }
+  }
+}
