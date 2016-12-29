@@ -54,6 +54,19 @@ body {
 }
 
 #details {
+  ul {
+    margin: 0;
+  }
+
+  h5 {
+    margin: 0;
+    font-size: 1em;
+  }
+
+  p {
+    margin: .4em 0;
+  }
+
   .other {
     .cell {
       width: 50%;
@@ -77,4 +90,71 @@ body {
       }
     }
   }
+
+  .markdown {
+    border: 2px solid grey;
+    padding: .2em 1em;
+  }
+
+  .internal {
+    background-color: #ffc3ca;
+  }
+
+  h1 {
+    background-color: #dddddd;
+    border-radius: .2em;
+    padding: 0 .2em;
+    margin: .5em 0;
+  }
+
+  h4 {
+    background-color: #dddddd;
+    padding: .2em;
+    border-radius: .2em;
+    margin: .6em 0;
+  }
+
+  .changelog, .usages {
+    font-size: .8em;
+    list-style-type: none;
+    padding: 0;
+
+    li.hidden {
+      display: none;
+    }
+  }
+
+  .changelog li {
+    &:nth-child(even) {
+      background: #f0f0f0;
+    }
+
+    &:nth-child(1) {
+      font-weight: bold;
+    }
+
+    span {
+      display: inline-block;
+      width: 40%;
+
+      &:nth-child(1) {
+        width: 10%;
+      }
+
+      &:last-child {
+        width: 10%;
+      }
+    }
+  }
+
+  .usages li {
+    &:nth-child(even) {
+      background: #f0f0f0;
+    }
+  }
+
+  .inside {
+    margin-left: .5em;
+  }
 }
+

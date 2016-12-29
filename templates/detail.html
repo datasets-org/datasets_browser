@@ -4,32 +4,89 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Datasets {{ ds["name"] }}</title>
+    <title>Datasets: {{ ds["name"] }}</title>
 </head>
 
-<body id="details">
-<h1>{{ ds["name"] }}</h1>
+<body id="details" class="">
+<h1 class="{% if "internal" in ds and ds["internal"] %}internal{% endif %}">{{ ds["name"] }}</h1>
 <p class="tags">
 {% for tag in ds["tags"] %}
     <span>{{ tag }}</span>
 {% endfor %}
 </p>
-<h4>{{ id }}</h4>
-{% if "maintainer" in ds %}<p>{{ ds["maintainer"] }}</p>{% endif%}
+<b>{{ id }}</b>
+{% if "maintainer" in ds and ds["maintainer"] %}<p>{{ ds["maintainer"] }}</p>{% endif%}
+{% if "from" in ds and ds["from"] %}<p>from: <a href="{{ url_for('detail', id=ds["from"]) }}">{{ ds["from"] }}</a></p>{% endif %}
+
+{% if "url" in ds and ds["url"] %}<p><b>Url:</b> {{ ds["url"] }}</p>{% endif %}
+{% if "type" in ds and ds["type"] %}<p><b>Type:</b> {{ ds["type"] }}</p>{% endif %}
+
+{% if "internal" in ds %}
+    <p>Internal: {{ ds["internal"] }}</p>
+{% endif %}
+
+{# maybe check if type is FS #}
+<h4>FS</h4>
+{% if "paths" in ds and ds["paths"] %}
 <p>
+    <h5>Paths</h5>
     <ul>
     {% for path in ds["paths"] %}
         <li>{{ path }}</li>
     {% endfor %}
     </ul>
 </p>
+{% endif %}
+
+{% if "data" in ds and ds["data"] %}
 <p>
+    <h5>Data</h5>
+    <ul>
+    {% for path in ds["data"] %}
+        <li>{{ path }}</li>
+    {% endfor %}
+    </ul>
+</p>
+{% endif %}
+
+{% if "links" in ds and ds["links"] %}
+<p>
+    <h5>Links</h5>
     <ul>
     {% for path in ds["links"] %}
         <li>{{ path }}</li>
     {% endfor %}
     </ul>
 </p>
+{% endif %}
+
+{% if "characteristics" in ds and ds["characteristics"] %}
+<p>
+    <h5>Characteristics</h5>
+    {% for k, v in ds["characteristics"] %}
+        <div class="inside">
+            <h5>{{ k }}</h5>
+            <div class="inside">
+                {% for field, val in v %}
+                    <p>
+                        {% if val is mapping %}
+                            <h5>{{ field }}:</h5>
+                            <div class="inside">
+                                {% for key, value in val.items() %}
+                                    <b>{{ key }}:</b> {{ value }}<br>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <b>{{ field }}:</b> {{ val }}
+                        {% endif %}
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</p>
+{% endif %}
+
 <div class="other">
     {% for key, data in ds.items() %}
     {% if key not in processed %}
@@ -42,16 +99,48 @@
     {% endfor %}
 </div>
 
+{% if markdowns %}
+    <h4>Markdowns</h4>
+    <div class="markdowns">
+    {% for path, html in markdowns.items() %}
+        {{ path }}
+        <div class="markdown">
+            {{ html }}
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
+
 {% if "usages" in ds %}
 <p>
-    <ul>
-    {% for usage in ds["usages"] %}
-        <li>{{ usage }}</li>
+    <h4>Usages</h4>
+    <ul class="usages">
+    {% for t, usage in ds["usages"] %}
+        <li class="{% if loop.index > 10 %}hidden{% endif %}">{{ t }} {{ usage }}</li>
     {% endfor %}
+    <li>{% if ds["usages"]|length > 10 %}<a href="" id="usages_more">...</a>{% endif %}<li>
     </ul>
 </p>
 {% endif%}
 
+{% if "changelog" in ds %}
+<p>
+    <h4>Changelog</h4>
+    <ul class="changelog">
+        <li><span>Field</span><span>From</span><span>To</span><span>Time</span></li>
+        {% set count = [1] %}
+        {% for changes in ds["changelog"] %}
+            {% for change in changes %}
+                <li class="{% if count[0]> 10 %}hidden{% endif %}"><span>{{ change[0] }}</span><span>{{ change[1] }}</span><span>{{ change[2] }}</span><span>{{ change[3] }}</span></li>
+                {% if count.append(count.pop() + 1) %}{% endif %} {# increment count by 1 #}
+            {% endfor %}
+        {% endfor %}
+        <li>{% if count[0]> 10 %}<a href="" id="changelog_more">...</a>{% endif %}<li>
+    </ul>
+</p>
+{% endif%}
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 
 </html>
