@@ -12,16 +12,22 @@
         <a href="{{ url_for('detail', id=key) }}">
             <li id="{{ key }}">
                 <h1>{{ ds["name"] }}</h1>
+
+                {% if "tags" in ds and ds["tags"] %}
                 <p class="tags">
                 {% for tag in ds["tags"] %}
                     <span>{{ tag }}</span>
                 {% endfor %}
                 </p>
+                {% endif %}
+
+                {% if "paths" in ds and ds["paths"] %}
                 <p class="paths">
                 {% for path in ds["paths"] %}
                     <i>{{ path }}</i>
                 {% endfor %}
                 <p>
+                {% endif %}
              </li>
         </a>
     {% endfor %}
