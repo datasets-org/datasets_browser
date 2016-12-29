@@ -29,12 +29,12 @@ def detail(id):
                  "internal", "data", "type", "url", "from", "characteristics"}
     markdowns = {}
     # changelog time format
-    if "changelog" in data:
+    if "changelog" in data and data["changelog"]:
         for i in data["changelog"]:
             for c in i:
                 c[3] = datetime.fromtimestamp(c[3]).strftime("%d.%m.%Y %H:%M")
 
-    if "usages" in data:
+    if "usages" in data and data["usages"]:
         for c, i in enumerate(data["usages"]):
             d = copy.deepcopy(i)
             del d["timestamp"]
@@ -42,7 +42,7 @@ def detail(id):
                 datetime.fromtimestamp(i["timestamp"]).strftime(
                     "%d.%m.%Y %H:%M"), d)
 
-    if "markdowns" in data:
+    if "markdowns" in data and data["markdowns"]:
         for m in data["markdowns"]:
             try:
                 markdowns[m] = Markup(markdown.markdown(open(m).read()))
