@@ -9,6 +9,9 @@ var show_more = function (event) {
     });
 };
 
-document.querySelector("#changelog_more").addEventListener("click", show_more);
-document.querySelector("#usages_more").addEventListener("click", show_more);
-
+if (document.querySelector("#changelog_more")) {
+    document.querySelector("#changelog_more").addEventListener("click", show_more);
+}
+if (document.querySelector("#usages_more")) {
+    document.querySelector("#usages_more").addEventListener("click", show_more);
+}
