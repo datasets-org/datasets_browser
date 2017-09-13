@@ -6,7 +6,6 @@ services:
     - "8888:5000"
     volumes:
     - .:/app
-    command: python web.py
     depends_on:
     - sass
   dev:

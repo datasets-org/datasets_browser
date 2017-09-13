@@ -1,6 +1,5 @@
 import copy
 import markdown
-import os
 import requests
 import yaml
 from datetime import datetime
