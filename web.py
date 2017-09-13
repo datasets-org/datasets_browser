@@ -1,16 +1,28 @@
 import copy
+import os
+from datetime import datetime
+
 import markdown
 import requests
 import yaml
-from datetime import datetime
 from flask import Flask
 from flask import Markup
 from flask import render_template
 
 app = Flask(__name__)
-cfg = yaml.load(open("conf/config.yaml"))
 
-address = cfg["server"]
+address = None
+try:
+    cfg = yaml.load(open("conf/config.yaml"))
+    address = cfg["server"]
+except Exception as e:
+    print(e)
+
+if "server" in os.environ:
+    address = os.environ["server"]
+
+if not address:
+    raise Exception("Server address is not specified")
 
 
 @app.route("/")
