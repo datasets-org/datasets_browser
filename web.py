@@ -1,63 +1,63 @@
+import argparse
 import copy
 import os
 from datetime import datetime
 
 import markdown
-import yaml
 from flask import Flask
 from flask import Markup
+from flask import g
 from flask import render_template
 
-from ds.config import Config
+from ds.config.config_env import ConfigEnv
+from ds.config.config_json import ConfigJson
+from ds.config.config_yaml import ConfigYaml
 from ds.datasets import Datasets
+from ds.datasets_config import DatasetsConfig
+from web_config import WebConfig
 
 app = Flask(__name__)
 
-# todo move config to method
-address = None
-try:
-    cfg = yaml.load(open("conf/config.yaml"))
-    address = cfg["server"]
-except Exception as e:
-    print(e)
 
-if "server" in os.environ:
-    address = os.environ["server"]
-
-if not address:
-    raise Exception("Server address is not specified")
-
-# todo backend class
+def get_ds(conf_order=None):
+    ds = getattr(g, '_ds')
+    if ds is None:
+        if not conf_order:
+            conf_order = (ConfigEnv(),)
+        ds = g._ds = Datasets(DatasetsConfig(order=conf_order))
+    return ds
 
 
-ds = Datasets(Config())
-
-
-# todo backend class
-
+def get_conf(conf_order=None):
+    conf = getattr(g, '_conf')
+    if conf is None:
+        if not conf_order:
+            conf_order = (ConfigEnv(),)
+        conf = g._conf = WebConfig(order=conf_order)
+    return conf
 
 
 @app.route("/")
 def main():
+    ds = get_ds()
     data = ds.list_projects()
+    # todo support server side sort
     data = sorted(data.items(), key=lambda x: x[1]["name"])
     return render_template('index.html', data=data)
 
 
 @app.route('/detail/<ds_id>')
 def detail(ds_id: str):
+    ds = get_ds()
+    conf = get_conf()
     data = ds.project_details(ds_id)
-    # todo configurable processed
-    processed = {'name', "usages", "maintainer", "paths", "tags", "links",
-                 "markdowns", "_markdowns", "changelog", "_paths", "_links",
-                 "internal", "data", "type", "url", "from", "characteristics"}
+    processed = conf.processed
     markdowns = {}
     # changelog time format
-    # todo configurable format
     if "changelog" in data and data["changelog"]:
         for i in data["changelog"]:
             for c in i:
-                c[3] = datetime.fromtimestamp(c[3]).strftime("%d.%m.%Y %H:%M")
+                c[3] = datetime.fromtimestamp(c[3]).strftime(conf.date_format)
 
     if "usages" in data and data["usages"]:
         for c, i in enumerate(data["usages"]):
@@ -65,7 +65,7 @@ def detail(ds_id: str):
             del d["timestamp"]
             data["usages"][c] = (
                 datetime.fromtimestamp(i["timestamp"]).strftime(
-                    "%d.%m.%Y %H:%M"), d)
+                    conf.date_format), d)
 
     if "markdowns" in data and data["markdowns"]:
         for m in data["markdowns"]:
@@ -73,10 +73,44 @@ def detail(ds_id: str):
                 markdowns[m] = Markup(markdown.markdown(open(m).read()))
             except Exception as e:
                 print(e)
-    return render_template('detail.html', ds=data, processed=processed,
+    return render_template('detail.html',
+                           ds=data,
+                           processed=processed,
                            id=ds_id,
                            markdowns=markdowns)
 
 
+def get_conf_type(path):
+    if path == "ENV":
+        return ConfigEnv()
+    _, ext = os.path.splitext(i)
+    if ext == ".json":
+        return ConfigJson(path)
+    if ext == ".yaml" or ext == ".yml":
+        return ConfigYaml(path)
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-dc', "--datasets-conf", nargs='*')
+    parser.add_argument('-wc', "--web-conf", nargs='*')
+
+    args = parser.parse_args()
+
+    datasets_conf_order = []
+    if args.datasets_conf is not None:
+        for i in args.datasets_conf:
+            datasets_conf_order.append(get_conf_type(i))
+
+    server_conf_order = []
+    if args.web_conf is not None:
+        for i in args.web_conf:
+            server_conf_order.append(get_conf_type(i))
+
+    server_conf_order = tuple(server_conf_order) if server_conf_order else None
+    datasets_conf_order = tuple(datasets_conf_order) if datasets_conf_order \
+        else None
+    conf = get_conf(conf_order=server_conf_order)
+    get_ds(conf_order=datasets_conf_order)
+    app.run(host=conf.host,
+            port=conf.port)

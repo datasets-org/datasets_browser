@@ -1,12 +1,13 @@
 import requests
-from .config import Config
+
+from .datasets_config import DatasetsConfig
 from .urljoin import url_path_join
 
 
 class Datasets(object):
     # todo support python2
     # todo docstrings
-    def __init__(self, conf: Config):
+    def __init__(self, conf: DatasetsConfig = DatasetsConfig()):
         self.conf = conf
 
     def list_projects(self) -> dict:
@@ -19,4 +20,6 @@ class Datasets(object):
             url_path_join(self._get_address(), "detail", ds_id)).json()
 
     def _get_address(self) -> str:
-        return self.conf.get("address")
+        return "{}://{}:{}".format("https" if self.conf.ssl else "http",
+                                   self.conf.host,
+                                   self.conf.port)

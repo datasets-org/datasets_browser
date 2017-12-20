@@ -6,6 +6,7 @@ from .config_env import ConfigEnv
 
 
 class Config(object):
+    # todo use args ?
     def __init__(self, order: Tuple[ConfigBase] = (ConfigEnv(),)) -> None:
         """
 
@@ -13,6 +14,8 @@ class Config(object):
             order (tuple): tuple of ConfigBase instances defining the order
             of config files
         """
+        if order is None:
+            order = (ConfigEnv(),)
         self.__configs = order
         for c in self.__configs:
             assert isinstance(c, ConfigBase)
