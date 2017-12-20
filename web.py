@@ -40,7 +40,10 @@ def get_conf(conf_order=None):
 @app.route("/")
 def main():
     ds = get_ds()
-    data = ds.list_projects()
+    try:
+        data = ds.list()
+    except Exception as e:
+        return "Server error ({}) {}".format(ds.get_address(), e), 500
     # todo support server side sort
     data = sorted(data.items(), key=lambda x: x[1]["name"])
     return render_template('index.html', data=data)
@@ -50,34 +53,54 @@ def main():
 def detail(ds_id: str):
     ds = get_ds()
     conf = get_conf()
-    data = ds.project_details(ds_id)
+    try:
+        data = ds.project_details(ds_id)
+    except Exception as e:
+        return "Server error ({}) {}".format(ds.get_address(), e), 500
+
+    process_changelog(data, conf)
+    process_usages(data, conf)
+    markdowns = process_markdowns(data)
+
     processed = conf.processed
-    markdowns = {}
-    # changelog time format
+    return render_template('detail.html',
+                           ds=data,
+                           processed=processed,
+                           id=ds_id,
+                           markdowns=markdowns)
+
+
+def process_changelog(data, conf):
     if "changelog" in data and data["changelog"]:
         for i in data["changelog"]:
             for c in i:
-                c[3] = datetime.fromtimestamp(c[3]).strftime(conf.date_format)
+                c[3] = format_date(c[3], conf.date_format)
 
+
+def process_usages(data, conf):
     if "usages" in data and data["usages"]:
         for c, i in enumerate(data["usages"]):
             d = copy.deepcopy(i)
             del d["timestamp"]
             data["usages"][c] = (
-                datetime.fromtimestamp(i["timestamp"]).strftime(
-                    conf.date_format), d)
+                format_date(i["timestamp"], conf.date_format),
+                d
+            )
 
+
+def process_markdowns(data):
+    markdowns = {}
     if "markdowns" in data and data["markdowns"]:
         for m in data["markdowns"]:
             try:
                 markdowns[m] = Markup(markdown.markdown(open(m).read()))
             except Exception as e:
                 print(e)
-    return render_template('detail.html',
-                           ds=data,
-                           processed=processed,
-                           id=ds_id,
-                           markdowns=markdowns)
+    return markdowns
+
+
+def format_date(val: str, date_format: str):
+    return datetime.fromtimestamp(val).strftime(date_format)
 
 
 def get_conf_type(path):
