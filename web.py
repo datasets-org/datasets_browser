@@ -110,6 +110,8 @@ if __name__ == "__main__":
     server_conf_order = tuple(server_conf_order) if server_conf_order else None
     datasets_conf_order = tuple(datasets_conf_order) if datasets_conf_order \
         else None
+
+    print(datasets_conf_order)
     conf = get_conf(conf_order=server_conf_order)
     get_ds(conf_order=datasets_conf_order)
     app.run(host=conf.host,
