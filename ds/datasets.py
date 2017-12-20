@@ -4,6 +4,8 @@ from .urljoin import url_path_join
 
 
 class Datasets(object):
+    # todo support python2
+    # todo docstrings
     def __init__(self, conf: Config):
         self.conf = conf
 
