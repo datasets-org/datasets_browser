@@ -23,7 +23,10 @@ class Config(object):
     def __get(self, key: str, return_type: type = None) -> Any:
         v = None
         for c in self.__configs:
-            v = c.get(key)
+            if isinstance(c, ConfigEnv):
+                v = c.get("{}_{}".format(self.__class__.__name__, key))
+            else:
+                v = c.get(key)
 
         if v is None:
             return
@@ -42,3 +45,11 @@ class Config(object):
             val = self.__get(i, return_type=type(getattr(self, i)))
             if val is not None:
                 setattr(self, i, val)
+
+    def __str__(self):
+        s = ""
+        for i in vars(self):
+            if i.startswith("_"):
+                continue
+            s += "{}\t{}\n".format(i, getattr(self, i))
+        return s

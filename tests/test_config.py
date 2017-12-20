@@ -14,13 +14,13 @@ class Conf(Config):
 
 
 def test_config():
-    os.environ["NUM"] = "52"
+    os.environ["CONF_NUM"] = "52"
     conf = Conf()
     assert conf.hello == "world"
     assert conf.num == 52
     assert isinstance(conf.num, int)
     assert isinstance(conf.hello, str)
-    del os.environ["NUM"]
+    del os.environ["CONF_NUM"]
 
 
 class ConfYaml(Config):
@@ -49,13 +49,13 @@ class ConfYamlEnv(Config):
 
 
 def test_config_yaml_env():
-    os.environ["hello"] = "conf"
+    os.environ["ConfYamlEnv_hello"] = "conf"
     conf = ConfYamlEnv()
     assert conf.hello == "conf"
     assert conf.num == 42
     assert isinstance(conf.num, int)
     assert isinstance(conf.hello, str)
-    del os.environ["hello"]
+    del os.environ["ConfYamlEnv_hello"]
 
 
 class ConfEnvYaml(Config):
@@ -68,13 +68,13 @@ class ConfEnvYaml(Config):
 
 
 def test_config_env_yaml():
-    os.environ["hello"] = "conf"
+    os.environ["ConfEnvYaml_hello"] = "conf"
     conf = ConfEnvYaml()
     assert conf.hello == "universe"
     assert conf.num == 42
     assert isinstance(conf.num, int)
     assert isinstance(conf.hello, str)
-    del os.environ["hello"]
+    del os.environ["ConfEnvYaml_hello"]
 
 
 class ConfJson(Config):

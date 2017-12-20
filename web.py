@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 
 def get_ds(conf_order=None):
-    ds = getattr(g, '_ds')
+    ds = getattr(g, '_ds', None)
     if ds is None:
         if not conf_order:
             conf_order = (ConfigEnv(),)
@@ -29,7 +29,7 @@ def get_ds(conf_order=None):
 
 
 def get_conf(conf_order=None):
-    conf = getattr(g, '_conf')
+    conf = getattr(g, '_conf', None)
     if conf is None:
         if not conf_order:
             conf_order = (ConfigEnv(),)
@@ -111,7 +111,6 @@ if __name__ == "__main__":
     datasets_conf_order = tuple(datasets_conf_order) if datasets_conf_order \
         else None
 
-    print(datasets_conf_order)
     conf = get_conf(conf_order=server_conf_order)
     get_ds(conf_order=datasets_conf_order)
     app.run(host=conf.host,
