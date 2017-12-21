@@ -1,7 +1,7 @@
 import requests
 
 from .datasets_config import DatasetsConfig
-from .urljoin import url_path_join
+from urljoin import url_path_join
 
 
 # todo support python2
