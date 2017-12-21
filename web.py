@@ -52,7 +52,7 @@ def main():
 @app.route('/detail/<ds_id>')
 def detail(ds_id: str):
     ds = get_ds()
-    conf = get_conf()1
+    conf = get_conf()
     try:
         data = ds.project_details(ds_id)
     except Exception as e:
