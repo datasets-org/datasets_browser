@@ -44,7 +44,6 @@ def main():
         data = ds.list()
     except Exception as e:
         return "Server error ({}) {}".format(ds.get_address(), e), 500
-    print(data)
     # todo support server side sort
     data = sorted(data.items(), key=lambda x: x[1]["name"])
     return render_template('index.html', data=data)
