@@ -12,8 +12,8 @@ from flask import render_template
 from confobj import ConfigEnv
 from confobj import ConfigJson
 from confobj import ConfigYaml
-from ds.datasets import Datasets
-from ds.datasets_config import DatasetsConfig
+from datasets_lib import Datasets
+from datasets_lib import DatasetsConfig
 from web_config import WebConfig
 
 app = Flask(__name__)

@@ -5,3 +5,4 @@ pyYAML
 twisted
 urljoin
 confobj
+datasets_lib
