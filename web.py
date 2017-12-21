@@ -72,7 +72,7 @@ def detail(ds_id: str):
 
 
 def process_changelog(data, conf):
-    if not("changelog" in data and data["changelog"]):
+    if not ("changelog" in data and data["changelog"]):
         return
     for i in data["changelog"]:
         for c in i:
@@ -80,15 +80,12 @@ def process_changelog(data, conf):
 
 
 def process_usages(data, conf):
-    if not("usages" in data and data["usages"]):
+    if not ("usages" in data and data["usages"]):
         return
     for c, i in enumerate(data["usages"]):
         d = copy.deepcopy(i)
         del d["timestamp"]
-        data["usages"][c] = (
-            format_date(i["timestamp"], conf.date_format),
-            d
-        )
+        data["usages"][c] = (format_date(i["timestamp"], conf.date_format), d)
 
 
 def process_markdowns(data):
