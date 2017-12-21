@@ -93,6 +93,7 @@ def process_markdowns(data):
         return markdowns
     for m in data["markdowns"]:
         try:
+            # todo not locally
             markdowns[m] = Markup(markdown.markdown(open(m).read()))
         except Exception as e:
             print(e)
