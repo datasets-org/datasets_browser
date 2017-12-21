@@ -1,7 +1,6 @@
-from typing import Tuple
-
 from confobj import Config
 from confobj import ConfigBase
+from typing import Tuple
 
 
 class WebConfig(Config):

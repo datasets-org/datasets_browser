@@ -4,16 +4,16 @@ import os
 from datetime import datetime
 
 import markdown
-from flask import Flask
-from flask import Markup
-from flask import g
-from flask import render_template
-
 from confobj import ConfigEnv
 from confobj import ConfigJson
 from confobj import ConfigYaml
 from datasets_lib import Datasets
 from datasets_lib import DatasetsConfig
+from flask import Flask
+from flask import Markup
+from flask import g
+from flask import render_template
+
 from web_config import WebConfig
 
 app = Flask(__name__)
@@ -52,7 +52,7 @@ def main():
 @app.route('/detail/<ds_id>')
 def detail(ds_id: str):
     ds = get_ds()
-    conf = get_conf()
+    conf = get_conf()1
     try:
         data = ds.project_details(ds_id)
     except Exception as e:
