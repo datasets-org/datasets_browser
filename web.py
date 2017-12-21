@@ -72,31 +72,34 @@ def detail(ds_id: str):
 
 
 def process_changelog(data, conf):
-    if "changelog" in data and data["changelog"]:
-        for i in data["changelog"]:
-            for c in i:
-                c[3] = format_date(c[3], conf.date_format)
+    if not("changelog" in data and data["changelog"]):
+        return
+    for i in data["changelog"]:
+        for c in i:
+            c[3] = format_date(c[3], conf.date_format)
 
 
 def process_usages(data, conf):
-    if "usages" in data and data["usages"]:
-        for c, i in enumerate(data["usages"]):
-            d = copy.deepcopy(i)
-            del d["timestamp"]
-            data["usages"][c] = (
-                format_date(i["timestamp"], conf.date_format),
-                d
-            )
+    if not("usages" in data and data["usages"]):
+        return
+    for c, i in enumerate(data["usages"]):
+        d = copy.deepcopy(i)
+        del d["timestamp"]
+        data["usages"][c] = (
+            format_date(i["timestamp"], conf.date_format),
+            d
+        )
 
 
 def process_markdowns(data):
     markdowns = {}
-    if "markdowns" in data and data["markdowns"]:
-        for m in data["markdowns"]:
-            try:
-                markdowns[m] = Markup(markdown.markdown(open(m).read()))
-            except Exception as e:
-                print(e)
+    if not ("markdowns" in data and data["markdowns"]):
+        return markdowns
+    for m in data["markdowns"]:
+        try:
+            markdowns[m] = Markup(markdown.markdown(open(m).read()))
+        except Exception as e:
+            print(e)
     return markdowns
 
 
