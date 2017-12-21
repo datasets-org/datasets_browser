@@ -16,9 +16,12 @@ services:
     - .:/app
     environment:
     - FLASK_DEBUG=1
+    - DATASETSCONFIG_HOST=mock
+    - DATASETSCONFIG_PORT=5000
     command: python web.py
     depends_on:
     - sass_watch
+    - mock
   sass:
     image: ubuntudesign/sass
     volumes:
@@ -34,3 +37,10 @@ services:
     volumes:
     - ./ds:/ds
     - ./tests:/tests
+  mock:
+    build: mock
+    environment:
+    - FLASK_DEBUG=1
+    volumes:
+    - ./mock:/mock
+

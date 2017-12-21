@@ -9,7 +9,7 @@
 <body>
 <ul class="overview">
     {% for key, ds in data %}
-        <a href="{{ url_for('detail', id=key) }}">
+        <a href="{{ url_for('detail', ds_id=key) }}">
             <li id="{{ key }}">
                 <h1>{{ ds["name"] }}</h1>
 
