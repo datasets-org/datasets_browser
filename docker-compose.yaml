@@ -32,11 +32,6 @@ services:
     volumes:
     - ./static/css/:/app
     command: sass --watch /app
-  tests:
-    build: tests
-    volumes:
-    - ./ds:/ds
-    - ./tests:/tests
   mock:
     build: mock
     environment:

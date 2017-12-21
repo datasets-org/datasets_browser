@@ -4,3 +4,4 @@ markdown
 pyYAML
 twisted
 urljoin
+confobj

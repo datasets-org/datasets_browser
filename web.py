@@ -9,9 +9,9 @@ from flask import Markup
 from flask import g
 from flask import render_template
 
-from ds.config.config_env import ConfigEnv
-from ds.config.config_json import ConfigJson
-from ds.config.config_yaml import ConfigYaml
+from confobj import ConfigEnv
+from confobj import ConfigJson
+from confobj import ConfigYaml
 from ds.datasets import Datasets
 from ds.datasets_config import DatasetsConfig
 from web_config import WebConfig

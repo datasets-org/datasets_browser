@@ -1,7 +1,7 @@
 from typing import Tuple
 
-from .config.config import Config
-from .config.config_base import ConfigBase
+from confobj import Config
+from confobj import ConfigBase
 
 
 class DatasetsConfig(Config):

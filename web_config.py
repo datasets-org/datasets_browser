@@ -1,7 +1,7 @@
 from typing import Tuple
 
-from ds.config.config import Config
-from ds.config.config_base import ConfigBase
+from confobj import Config
+from confobj import ConfigBase
 
 
 class WebConfig(Config):
